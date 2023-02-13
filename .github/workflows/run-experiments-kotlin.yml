@@ -20,8 +20,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - experimentId: 1
-          - experimentId: 2
           - experimentId: 3
 
     runs-on: ubuntu-latest
