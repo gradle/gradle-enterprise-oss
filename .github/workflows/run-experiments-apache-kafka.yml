@@ -10,6 +10,7 @@ env:
   DEVELOCITY_URL: "https://ge.solutions-team.gradle.com"
   GIT_REPO: "https://github.com/apache/kafka"
   TASKS: "test"
+  ARGS: "-PignoreFailures=true"
 
 jobs:
   Experiment:
@@ -32,12 +33,6 @@ jobs:
         with:
           downloadDevelopmentRelease: true
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Ignore Test Failures
-        run: |
-          mkdir ~/git-hooks
-          echo -e 'echo "\nallprojects { tasks.withType(Test).configureEach { ignoreFailures = true } }" >> build.gradle\n' >> ~/git-hooks/post-checkout
-          chmod +x ~/git-hooks/post-checkout
-          git config --global core.hooksPath ~/git-hooks
       - name: Run experiment 1
         uses: gradle/develocity-build-validation-scripts/.github/actions/gradle/experiment-1@actions-stable
         env:
@@ -45,6 +40,7 @@ jobs:
         with:
           gitRepo: ${{ env.GIT_REPO }}
           tasks: ${{ env.TASKS }}
+          args: ${{ env.ARGS }}
           develocityUrl: ${{ env.DEVELOCITY_URL }}
         if: matrix.experimentId == 1
       - name: Run experiment 2
@@ -54,6 +50,7 @@ jobs:
         with:
           gitRepo: ${{ env.GIT_REPO }}
           tasks: ${{ env.TASKS }}
+          args: ${{ env.ARGS }}
           develocityUrl: ${{ env.DEVELOCITY_URL }}
           failIfNotFullyCacheable: true
         if: matrix.experimentId == 2
@@ -64,6 +61,7 @@ jobs:
         with:
           gitRepo: ${{ env.GIT_REPO }}
           tasks: ${{ env.TASKS }}
+          args: ${{ env.ARGS }}
           develocityUrl: ${{ env.DEVELOCITY_URL }}
           failIfNotFullyCacheable: true
         if: matrix.experimentId == 3
